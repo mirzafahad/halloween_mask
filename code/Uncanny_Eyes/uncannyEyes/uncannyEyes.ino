@@ -67,7 +67,8 @@ extern void user_loop(void);
 #define NOBLINK 0       // Not currently engaged in a blink
 #define ENBLINK 1       // Eyelid is currently closing
 #define DEBLINK 2       // Eyelid is currently opening
-typedef struct {
+typedef struct 
+{
   uint8_t  state;       // NOBLINK/ENBLINK/DEBLINK
   uint32_t duration;    // Duration of blink state (micros)
   uint32_t startTime;   // Time (micros) of last state change
@@ -138,7 +139,8 @@ bool receiver = false;
 
 // INITIALIZATION -- runs once at startup ----------------------------------
 
-void setup(void) {
+void setup(void) 
+{
   uint8_t e; // Eye index, 0 to NUM_EYES-1
 
 #if defined(SYNCPIN) && (SYNCPIN >= 0) // If using I2C sync...
@@ -155,7 +157,7 @@ void setup(void) {
   Serial.begin(115200);
   //while (!Serial);
   Serial.println("Init");
-  randomSeed(analogRead(A3)); // Seed random() from floating analog input
+  randomSeed(analogRead(A0)); // Seed random() from floating analog input
 
 #ifdef DISPLAY_BACKLIGHT
   // Enable backlight pin, initially off
@@ -167,23 +169,23 @@ void setup(void) {
   user_setup();
 
   // Initialize eye objects based on eyeInfo list in config.h:
-  for(e=0; e<NUM_EYES; e++) {
-    Serial.print("Create display #"); Serial.println(e);
+  for(e=0; e<NUM_EYES; e++) 
+  {
+    Serial.print("Create display #"); 
+    Serial.println(e);
 #if defined(_ADAFRUIT_ST7789H_) // 240x240 TFT
-    eye[e].display     = new displayType(&TFT_SPI, eyeInfo[e].select,
-                           DISPLAY_DC, -1);
+    eye[e].display     = new displayType(&TFT_SPI, eyeInfo[e].select, DISPLAY_DC, -1);
 #elif defined(_ADAFRUIT_ST7735H_) || defined(_ADAFRUIT_ST77XXH_) // 128x128 TFT
-    eye[e].display     = new displayType(&TFT_SPI, eyeInfo[e].select,
-                           DISPLAY_DC, -1);
+    eye[e].display     = new displayType(&TFT_SPI, eyeInfo[e].select, DISPLAY_DC, -1);
 #else // OLED
-    eye[e].display     = new displayType(128, 128, &TFT_SPI,
-                           eyeInfo[e].select, DISPLAY_DC, -1);
+    eye[e].display     = new displayType(128, 128, &TFT_SPI, eyeInfo[e].select, DISPLAY_DC, -1);
 #endif
     eye[e].blink.state = NOBLINK;
     // If project involves only ONE eye and NO other SPI devices, its
     // select line can be permanently tied to GND and corresponding pin
     // in config.h set to -1.  Best to use it though.
-    if(eyeInfo[e].select >= 0) {
+    if(eyeInfo[e].select >= 0) 
+    {
       pinMode(eyeInfo[e].select, OUTPUT);
       digitalWrite(eyeInfo[e].select, HIGH); // Deselect them all
     }

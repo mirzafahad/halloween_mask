@@ -12,7 +12,7 @@
 #if defined(ADAFRUIT_HALLOWING) || defined(ARDUINO_SAMD_CIRCUITPLAYGROUND_EXPRESS) || defined(ARDUINO_NRF52840_CIRCUITPLAY)
   #define SYMMETRICAL_EYELID
 #else                     // Otherwise your choice, standard is asymmetrical
-  //#define SYMMETRICAL_EYELID
+  #define SYMMETRICAL_EYELID
 #endif
 
 // Enable ONE of these #includes -- HUGE graphics tables for various eyes:
@@ -29,7 +29,7 @@
 
 // Optional: enable this line for startup logo (screen test/orient):
 #if !defined(ADAFRUIT_HALLOWING)    // Hallowing can't always fit logo+eye
-  #include "graphics/logo.h"        // Otherwise your choice, if it fits
+//  #include "graphics/logo.h"        // Otherwise your choice, if it fits
 #endif
 
 // EYE LIST ----------------------------------------------------------------
@@ -48,8 +48,8 @@ eyeInfo_t eyeInfo[] = {
 #elif defined(ADAFRUIT_TRINKET_M0)
   {  0, -1, 0 }, // SINGLE EYE display-select, no wink, no rotation
 #else
-  {  9, 0, 0 }, // LEFT EYE display-select and wink pins, no rotation
-  { 10, 2, 0 }, // RIGHT EYE display-select and wink pins, no rotation
+  //{ A1, 2, 2 }, // LEFT EYE display-select and wink pins, no rotation
+  { A3, -1, 1 }, // RIGHT EYE display-select and wink pins, no rotation
 #endif
 };
 
@@ -86,8 +86,8 @@ eyeInfo_t eyeInfo[] = {
     #define DISPLAY_DC       1
     #define DISPLAY_RESET   -1 // Use MCU reset pin
   #else
-    #define DISPLAY_DC       7  // Data/command pin for ALL displays
-    #define DISPLAY_RESET    8  // Reset pin for ALL displays
+    #define DISPLAY_DC       A5  // Data/command pin for ALL displays
+    #define DISPLAY_RESET    A4  // Reset pin for ALL displays
   #endif
 #endif
 
@@ -122,7 +122,7 @@ eyeInfo_t eyeInfo[] = {
 //#define JOYSTICK_Y_PIN A1 // Analog pin for eye vert position (")
 //#define JOYSTICK_X_FLIP   // If defined, reverse stick X axis
 //#define JOYSTICK_Y_FLIP   // If defined, reverse stick Y axis
-#define TRACKING            // If defined, eyelid tracks pupil
+//#define TRACKING            // If defined, eyelid tracks pupil
 #define AUTOBLINK           // If defined, eyes also blink autonomously
 #if defined(ADAFRUIT_HALLOWING)
   #define LIGHT_PIN      A1 // Hallowing light sensor pin
@@ -140,8 +140,8 @@ eyeInfo_t eyeInfo[] = {
   #define BLINK_PIN      -1 // No blink pin
   #define LIGHT_PIN      -1 // No photocell
 #else
-  #define BLINK_PIN       1 // Pin for manual blink button (BOTH eyes)
-  #define LIGHT_PIN      A2 // Photocell or potentiometer (else auto iris)
+  #define BLINK_PIN       -1 // Pin for manual blink button (BOTH eyes)
+  #define LIGHT_PIN      -1 // Photocell or potentiometer (else auto iris)
 //#define LIGHT_PIN_FLIP    // If defined, reverse reading from dial/photocell
   #define LIGHT_MIN       0 // Lower reading from sensor
   #define LIGHT_MAX    1023 // Upper reading from sensor

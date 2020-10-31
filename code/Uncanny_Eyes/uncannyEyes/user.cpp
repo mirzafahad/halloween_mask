@@ -9,9 +9,50 @@
 // User globals can go here, recommend declaring as static, e.g.:
 // static int foo = 42;
 
-// Called once near the end of the setup() function.
-void user_setup(void) {
+#include <Adafruit_DotStar.h>
+
+static const int DOTSTAR_DATAPIN  = 41;
+static const int DOTSTAR_CLOCKPIN = 40;
+static const int EL_POWER_EN      = 3;
+static const int EL_PULSE         = 5;
+static const uint32_t LIGHT_ON_TIME =  15000; //ms = 15 Seconds
+
+static unsigned long PreviousMillis;
+Adafruit_DotStar strip(1, DOTSTAR_DATAPIN, DOTSTAR_CLOCKPIN, DOTSTAR_BRG);
+
+typedef enum eState
+{
+    START,
+    LIGHT_ON,
+    TIME_OUT,
+}eState_t;
+
+static eState_t CurrentState = START;
+
+void EL_on(void)
+{
+  digitalWrite(EL_POWER_EN, HIGH);  
+  digitalWrite(EL_PULSE, HIGH);  
+  delay(150); 
+  digitalWrite(EL_PULSE, LOW);
 }
+
+void EL_off(void)
+{
+  digitalWrite(EL_POWER_EN, LOW);
+}
+
+
+// Called once near the end of the setup() function.
+void user_setup(void) 
+{
+    pinMode(EL_PULSE, OUTPUT);
+    pinMode(EL_POWER_EN, OUTPUT);
+    EL_off();
+    strip.begin(); // Initialize pins for output
+    strip.show();  // Turn all LEDs off ASAP
+}
+
 
 // Called periodically during eye animation. This is invoked in the
 // interval before starting drawing on the last eye so it won't exacerbate
@@ -25,7 +66,35 @@ void user_setup(void) {
 // other over-time operations won't look very good using simple +/-
 // increments, it's better to use millis() or micros() and work
 // algebraically with elapsed times instead.
-void user_loop(void) {
+void user_loop(void) 
+{
+    static bool elOn = false;
+    static int lightOnCounter = 0;
+    
+    int sensorValue = analogRead(A1);
+
+
+    if(sensorValue <= 150 && CurrentState == START)
+    {
+        EL_on();
+        CurrentState = LIGHT_ON;
+        PreviousMillis = millis();
+    }
+    else if(CurrentState == LIGHT_ON)
+    {
+        //Serial.println("Timer Checking");
+        if((unsigned long)(millis() - PreviousMillis) >= LIGHT_ON_TIME)
+        {
+            EL_off();
+            delay(1000);
+            CurrentState = TIME_OUT;
+        }
+    }
+    else if (CurrentState == TIME_OUT && sensorValue > 200)
+    {
+        CurrentState = START;
+    }
+       
 /*
   Suppose we have a global bool "animating" (meaning something is in
   motion) and global uint32_t's "startTime" (the initial time at which
