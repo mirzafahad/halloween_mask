@@ -2,7 +2,12 @@
 [![License](https://img.shields.io/badge/license-MIT-red)](https://opensource.org/licenses/MIT)
 [![Blog](https://img.shields.io/badge/blog-post-yellow)](https://mirzafahad.github.io/2020-10-31-halloween-mask/)
 
-Add the famous [Uncanny Eyes](https://learn.adafruit.com/animated-electronic-eyes) to any Masks/Props. 
+Added the famous [Uncanny Eyes](https://learn.adafruit.com/animated-electronic-eyes) to a Mask. The PCB has three connectors for sensors:
+- PIR conenctor
+- I2C connector for any I2C capabale sensor
+- LDR 
+
+If you don't need want to use EL wire you can use the EL wire conenctor for other sensors, motors, relays etc.
 
 Components used:
 - [Adafruit ItsyBitsy M0](https://www.adafruit.com/product/3727)
@@ -13,4 +18,5 @@ Components used:
 ![Mask in action](/img/halloween.gif)
 
 More info: https://mirzafahad.github.io/2020-10-31-halloween-mask/
+
 Youtube: https://youtu.be/H35RDPNnSZM
