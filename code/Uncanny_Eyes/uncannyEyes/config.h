@@ -15,13 +15,15 @@
   #define SYMMETRICAL_EYELID
 #endif
 
+#define PIXEL_DOUBLE
+
 // Enable ONE of these #includes -- HUGE graphics tables for various eyes:
-#include "graphics/defaultEye.h"      // Standard human-ish hazel eye -OR-
+//#include "graphics/defaultEye.h"      // Standard human-ish hazel eye -OR-
 //#include "graphics/dragonEye.h"     // Slit pupil fiery dragon/demon eye -OR-
 //#include "graphics/noScleraEye.h"   // Large iris, no sclera -OR-
 //#include "graphics/goatEye.h"       // Horizontal pupil goat/Krampus eye -OR-
 //#include "graphics/newtEye.h"       // Eye of newt -OR-
-//#include "graphics/terminatorEye.h" // Git to da choppah!
+#include "graphics/terminatorEye.h" // Git to da choppah!
 //#include "graphics/catEye.h"        // Cartoonish cat (flat "2D" colors)
 //#include "graphics/owlEye.h"        // Minerva the owl (DISABLE TRACKING)
 //#include "graphics/naugaEye.h"      // Nauga googly eye (DISABLE TRACKING)
@@ -49,7 +51,7 @@ eyeInfo_t eyeInfo[] = {
   {  0, -1, 0 }, // SINGLE EYE display-select, no wink, no rotation
 #else
   //{ A1, 2, 2 }, // LEFT EYE display-select and wink pins, no rotation
-  { A3, -1, 1 }, // RIGHT EYE display-select and wink pins, no rotation
+  { A3, -1, 2 }, // RIGHT EYE display-select and wink pins, no rotation
 #endif
 };
 
@@ -81,7 +83,9 @@ eyeInfo_t eyeInfo[] = {
 #else
   // Enable ONE of these #includes to specify the display type being used
   //#include <Adafruit_SSD1351.h>  // OLED display library -OR-
-  #include <Adafruit_ST7735.h>  // TFT display library (enable one only)
+  //#include <Adafruit_ST7735.h>  // TFT display library (enable one only)
+  //#include "Adafruit_HX8357.h"
+  #include "Adafruit_ILI9341.h"
   #if defined(ADAFRUIT_TRINKET_M0)
     #define DISPLAY_DC       1
     #define DISPLAY_RESET   -1 // Use MCU reset pin
@@ -101,7 +105,8 @@ eyeInfo_t eyeInfo[] = {
   #if !defined(ARDUINO_ARCH_SAMD) && (F_CPU <= 72000000)
     #define SPI_FREQ 24000000  // OLED: 24 MHz on 72 MHz Teensy only
   #else
-    #define SPI_FREQ 12000000  // OLED: 12 MHz in all other cases
+    //#define SPI_FREQ 12000000  // OLED: 12 MHz in all other cases
+    #define SPI_FREQ 24000000 
   #endif
 #endif
 
@@ -122,7 +127,7 @@ eyeInfo_t eyeInfo[] = {
 //#define JOYSTICK_Y_PIN A1 // Analog pin for eye vert position (")
 //#define JOYSTICK_X_FLIP   // If defined, reverse stick X axis
 //#define JOYSTICK_Y_FLIP   // If defined, reverse stick Y axis
-//#define TRACKING            // If defined, eyelid tracks pupil
+#define TRACKING          // If defined, eyelid tracks pupil
 #define AUTOBLINK           // If defined, eyes also blink autonomously
 #if defined(ADAFRUIT_HALLOWING)
   #define LIGHT_PIN      A1 // Hallowing light sensor pin
@@ -140,7 +145,7 @@ eyeInfo_t eyeInfo[] = {
   #define BLINK_PIN      -1 // No blink pin
   #define LIGHT_PIN      -1 // No photocell
 #else
-  #define BLINK_PIN       -1 // Pin for manual blink button (BOTH eyes)
+  #define BLINK_PIN      -1 // Pin for manual blink button (BOTH eyes)
   #define LIGHT_PIN      -1 // Photocell or potentiometer (else auto iris)
 //#define LIGHT_PIN_FLIP    // If defined, reverse reading from dial/photocell
   #define LIGHT_MIN       0 // Lower reading from sensor

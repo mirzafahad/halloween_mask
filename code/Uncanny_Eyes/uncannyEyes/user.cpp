@@ -68,32 +68,32 @@ void user_setup(void)
 // algebraically with elapsed times instead.
 void user_loop(void) 
 {
-    static bool elOn = false;
-    static int lightOnCounter = 0;
-    
-    int sensorValue = analogRead(A1);
-
-
-    if(sensorValue <= 150 && CurrentState == START)
-    {
-        EL_on();
-        CurrentState = LIGHT_ON;
-        PreviousMillis = millis();
-    }
-    else if(CurrentState == LIGHT_ON)
-    {
-        //Serial.println("Timer Checking");
-        if((unsigned long)(millis() - PreviousMillis) >= LIGHT_ON_TIME)
-        {
-            EL_off();
-            delay(1000);
-            CurrentState = TIME_OUT;
-        }
-    }
-    else if (CurrentState == TIME_OUT && sensorValue > 200)
-    {
-        CurrentState = START;
-    }
+//    static bool elOn = false;
+//    static int lightOnCounter = 0;
+//    
+//    int sensorValue = analogRead(A1);
+//
+//
+//    if(sensorValue <= 150 && CurrentState == START)
+//    {
+//        EL_on();
+//        CurrentState = LIGHT_ON;
+//        PreviousMillis = millis();
+//    }
+//    else if(CurrentState == LIGHT_ON)
+//    {
+//        //Serial.println("Timer Checking");
+//        if((unsigned long)(millis() - PreviousMillis) >= LIGHT_ON_TIME)
+//        {
+//            EL_off();
+//            delay(1000);
+//            CurrentState = TIME_OUT;
+//        }
+//    }
+//    else if (CurrentState == TIME_OUT && sensorValue > 200)
+//    {
+//        CurrentState = START;
+//    }
        
 /*
   Suppose we have a global bool "animating" (meaning something is in

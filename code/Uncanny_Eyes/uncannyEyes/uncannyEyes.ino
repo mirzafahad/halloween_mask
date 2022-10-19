@@ -23,6 +23,7 @@
   #include <Adafruit_ZeroDMA.h>
 #endif
 
+
 typedef struct {        // Struct is defined before including config.h --
   int8_t  select;       // pin numbers for each eye's screen select line
   int8_t  wink;         // and wink button (or -1 if none) specified there,
@@ -58,9 +59,13 @@ extern void user_loop(void);
 #if defined(_ADAFRUIT_ST7789H_)
   typedef Adafruit_ST7789  displayType; // Using 240x240 TFT display(s)
 #elif defined(_ADAFRUIT_ST7735H_) || defined(_ADAFRUIT_ST77XXH_)
-  typedef Adafruit_ST7735  displayType; // Using TFT display(s)
+  //typedef Adafruit_ST7735  displayType; // Using TFT display(s)
+  //typedef Adafruit_HX8357  displayType;
+  typedef Adafruit_ILI9341 displayType;
 #else
-  typedef Adafruit_SSD1351 displayType; // Using OLED display(s)
+  //typedef Adafruit_SSD1351 displayType; // Using OLED display(s)
+  //typedef Adafruit_HX8357  displayType;
+  typedef Adafruit_ILI9341 displayType;
 #endif
 
 // A simple state machine is used to control eye blinks/winks:
@@ -178,7 +183,10 @@ void setup(void)
 #elif defined(_ADAFRUIT_ST7735H_) || defined(_ADAFRUIT_ST77XXH_) // 128x128 TFT
     eye[e].display     = new displayType(&TFT_SPI, eyeInfo[e].select, DISPLAY_DC, -1);
 #else // OLED
-    eye[e].display     = new displayType(128, 128, &TFT_SPI, eyeInfo[e].select, DISPLAY_DC, -1);
+    //eye[e].display     = new displayType(128, 128, &TFT_SPI, eyeInfo[e].select, DISPLAY_DC, -1);
+    // HX8357
+    //eye[e].display     = new displayType(&TFT_SPI, eyeInfo[e].select, DISPLAY_DC, DISPLAY_RESET);
+    eye[e].display     = new displayType(eyeInfo[e].select, DISPLAY_DC, DISPLAY_RESET);
 #endif
     eye[e].blink.state = NOBLINK;
     // If project involves only ONE eye and NO other SPI devices, its
@@ -225,6 +233,7 @@ void setup(void)
     Serial.print("Init ST77xx display #"); Serial.println(e);
 #else // OLED
     eye[e].display->begin(SPI_FREQ);
+    eye[e].display->fillScreen(ILI9341_BLACK);
 #endif
     Serial.println("Rotate");
     eye[e].display->setRotation(eyeInfo[e].rotation);
@@ -298,16 +307,20 @@ void setup(void)
     #endif
       &mirrorTFT[eyeInfo[0].rotation & 3], 1);
   #else // OLED
-    const uint8_t rotateOLED[] = { 0x74, 0x77, 0x66, 0x65 },
-                  mirrorOLED[] = { 0x76, 0x67, 0x64, 0x75 }; // Mirror+rotate
-    // If OLED, loop through ALL eyes and set up remap register
-    // from either mirrorOLED[] (first eye) or rotateOLED[] (others).
-    // The OLED library doesn't normally use the remap reg (TFT does).
-    for(e=0; e<NUM_EYES; e++) {
-      eye[e].display->sendCommand(SSD1351_CMD_SETREMAP, e ?
-        &rotateOLED[eyeInfo[e].rotation & 3] :
-        &mirrorOLED[eyeInfo[e].rotation & 3], 1);
-    }
+//    const uint8_t rotateOLED[] = { 0x74, 0x77, 0x66, 0x65 },
+//                  mirrorOLED[] = { 0x76, 0x67, 0x64, 0x75 }; // Mirror+rotate
+//    // If OLED, loop through ALL eyes and set up remap register
+//    // from either mirrorOLED[] (first eye) or rotateOLED[] (others).
+//    // The OLED library doesn't normally use the remap reg (TFT does).
+//    for(e=0; e<NUM_EYES; e++) {
+//      eye[e].display->sendCommand(SSD1351_CMD_SETREMAP, e ?
+//        &rotateOLED[eyeInfo[e].rotation & 3] :
+//        &mirrorOLED[eyeInfo[e].rotation & 3], 1);
+//}
+    const uint8_t mirrorTFT[]  = { 0x88, 0x28, 0x48, 0xE8 }; // Mirror+rotate
+    //eye[0].display->sendCommand(HX8357_MADCTL, &mirrorTFT[eyeInfo[0].rotation & 3], 1);
+    eye[0].display->sendCommand(ILI9341_MADCTL, &mirrorTFT[eyeInfo[0].rotation & 3], 1);
+    
 #endif
 #if defined(SYNCPIN) && (SYNCPIN >= 0)
   } // Don't mirror receiver screen
@@ -417,11 +430,12 @@ void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
 #elif defined(_ADAFRUIT_ST7735H_) || defined(_ADAFRUIT_ST77XXH_) // TFT
   eye[e].display->setAddrWindow(0, 0, 128, 128);
 #else // OLED
-  eye[e].display->writeCommand(SSD1351_CMD_SETROW);    // Y range
-  eye[e].display->spiWrite(0); eye[e].display->spiWrite(SCREEN_HEIGHT - 1);
-  eye[e].display->writeCommand(SSD1351_CMD_SETCOLUMN); // X range
-  eye[e].display->spiWrite(0); eye[e].display->spiWrite(SCREEN_WIDTH  - 1);
-  eye[e].display->writeCommand(SSD1351_CMD_WRITERAM);  // Begin write
+//  eye[e].display->writeCommand(SSD1351_CMD_SETROW);    // Y range
+//  eye[e].display->spiWrite(0); eye[e].display->spiWrite(SCREEN_HEIGHT - 1);
+//  eye[e].display->writeCommand(SSD1351_CMD_SETCOLUMN); // X range
+//  eye[e].display->spiWrite(0); eye[e].display->spiWrite(SCREEN_WIDTH  - 1);
+//  eye[e].display->writeCommand(SSD1351_CMD_WRITERAM);  // Begin write
+  eye[e].display->setAddrWindow(0, 0, 240, 320);
 #endif
   digitalWrite(eyeInfo[e].select, LOW);                // Re-chip-select
   digitalWrite(DISPLAY_DC, HIGH);                      // Data mode
