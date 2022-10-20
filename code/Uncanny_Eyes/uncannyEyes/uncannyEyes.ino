@@ -435,7 +435,7 @@ void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
 //  eye[e].display->writeCommand(SSD1351_CMD_SETCOLUMN); // X range
 //  eye[e].display->spiWrite(0); eye[e].display->spiWrite(SCREEN_WIDTH  - 1);
 //  eye[e].display->writeCommand(SSD1351_CMD_WRITERAM);  // Begin write
-  eye[e].display->setAddrWindow(0, 0, 240, 320);
+  eye[e].display->setAddrWindow(40, 0, 240, 320);
 #endif
   digitalWrite(eyeInfo[e].select, LOW);                // Re-chip-select
   digitalWrite(DISPLAY_DC, HIGH);                      // Data mode

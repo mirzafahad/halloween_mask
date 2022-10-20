@@ -19,11 +19,11 @@
 
 // Enable ONE of these #includes -- HUGE graphics tables for various eyes:
 //#include "graphics/defaultEye.h"      // Standard human-ish hazel eye -OR-
-//#include "graphics/dragonEye.h"     // Slit pupil fiery dragon/demon eye -OR-
+#include "graphics/dragonEye.h"     // Slit pupil fiery dragon/demon eye -OR-
 //#include "graphics/noScleraEye.h"   // Large iris, no sclera -OR-
 //#include "graphics/goatEye.h"       // Horizontal pupil goat/Krampus eye -OR-
 //#include "graphics/newtEye.h"       // Eye of newt -OR-
-#include "graphics/terminatorEye.h" // Git to da choppah!
+//#include "graphics/terminatorEye.h" // Git to da choppah!
 //#include "graphics/catEye.h"        // Cartoonish cat (flat "2D" colors)
 //#include "graphics/owlEye.h"        // Minerva the owl (DISABLE TRACKING)
 //#include "graphics/naugaEye.h"      // Nauga googly eye (DISABLE TRACKING)
@@ -51,7 +51,7 @@ eyeInfo_t eyeInfo[] = {
   {  0, -1, 0 }, // SINGLE EYE display-select, no wink, no rotation
 #else
   //{ A1, 2, 2 }, // LEFT EYE display-select and wink pins, no rotation
-  { A3, -1, 2 }, // RIGHT EYE display-select and wink pins, no rotation
+  { A3, -1, 1 }, // RIGHT EYE display-select and wink pins, no rotation
 #endif
 };
 
@@ -127,7 +127,7 @@ eyeInfo_t eyeInfo[] = {
 //#define JOYSTICK_Y_PIN A1 // Analog pin for eye vert position (")
 //#define JOYSTICK_X_FLIP   // If defined, reverse stick X axis
 //#define JOYSTICK_Y_FLIP   // If defined, reverse stick Y axis
-#define TRACKING          // If defined, eyelid tracks pupil
+//#define TRACKING          // If defined, eyelid tracks pupil
 #define AUTOBLINK           // If defined, eyes also blink autonomously
 #if defined(ADAFRUIT_HALLOWING)
   #define LIGHT_PIN      A1 // Hallowing light sensor pin
